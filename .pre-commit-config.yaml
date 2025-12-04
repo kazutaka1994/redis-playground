@@ -1,0 +1,44 @@
+# Pre-commit hooks configuration
+# https://pre-commit.com
+
+repos:
+  # Gitleaks - Secrets detection
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.30.0
+    hooks:
+      - id: gitleaks
+        name: Detect secrets with Gitleaks
+        description: Scan for secrets and credentials in your commits
+        entry: gitleaks protect --verbose --redact --staged --log-level=info
+        language: system
+        pass_filenames: false
+
+  # Ruff - Python linter and formatter
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.7
+    hooks:
+      - id: ruff
+        name: Ruff linter
+        args: [--fix, --show-fixes, --show-source]
+      - id: ruff-format
+        name: Ruff formatter
+
+  # Basic file checks
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v6.0.0
+    hooks:
+      - id: trailing-whitespace
+        name: Trim trailing whitespace
+      - id: end-of-file-fixer
+        name: Fix end of files
+      - id: check-yaml
+        name: Check YAML syntax
+      - id: check-added-large-files
+        name: Check for large files
+        args: ['--maxkb=1000']
+      - id: check-merge-conflict
+        name: Check for merge conflicts
+      - id: check-json
+        name: Check JSON syntax
+      - id: check-toml
+        name: Check TOML syntax

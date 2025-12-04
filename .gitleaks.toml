@@ -1,0 +1,44 @@
+# Gitleaks configuration file
+# https://github.com/gitleaks/gitleaks
+
+title = "Gitleaks Configuration for Redis Playground"
+
+# Extend the base configuration
+[extend]
+useDefault = true
+
+# Custom rules for this project
+[[rules]]
+id = "redis-connection-string"
+description = "Redis connection string"
+regex = '''redis://[a-zA-Z0-9:@._-]+'''
+tags = ["redis", "connection"]
+
+[[rules]]
+id = "postgres-connection-string"
+description = "PostgreSQL connection string"
+regex = '''postgres(ql)?://[a-zA-Z0-9:@._-]+/[a-zA-Z0-9_-]+'''
+tags = ["postgres", "connection"]
+
+# Allowlist - files and paths to ignore
+[allowlist]
+description = "Allowlisted files"
+paths = [
+    '''\.gitleaks\.toml$''',
+    '''(.*?)(png|jpg|gif|doc|pdf|bin|svg|socket)$''',
+    '''(go|python)\.(mod|sum)$''',
+]
+
+# Specific strings to ignore (example: test tokens)
+regexes = [
+    '''dummy-secret''',
+    '''test-token''',
+    '''example-key''',
+]
+
+# Stopwords - common false positives
+stopwords = [
+    "commit",
+    "config",
+    "password",  # The word itself when used in comments/docs
+]
