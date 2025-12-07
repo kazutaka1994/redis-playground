@@ -1,0 +1,91 @@
+[tool.poetry]
+package-mode = false
+
+[project]
+name = "redis-playground"
+version = "0.1.0"
+requires-python = ">=3.13"
+dependencies = [
+    "fastapi>=0.123.3,<0.124.0",
+    "uvicorn[standard]>=0.38.0,<0.39.0",
+    "redis>=7.1.0,<7.2.0",
+    "psycopg2-binary>=2.9.11,<2.10.0",
+    "python-dotenv>=1.2.1,<1.3.0",
+    "email-validator>=2.3.0,<2.4.0"
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=9.0.1,<9.1.0",
+    "pytest-asyncio>=1.3.0,<1.4.0",
+    "pytest-cov>=6.3.0,<6.4.0",
+    "pytest-mock>=3.15.1,<3.16.0",
+    "ruff>=0.14.7,<0.15.0",
+    "mypy>=1.19.0,<1.20.0",
+    "pre-commit>=4.0.0,<5.0.0",
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+python_classes = ["Test*"]
+python_functions = ["test_*"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+addopts = [
+    "-v",
+    "--strict-markers",
+    "--tb=short",
+    "--cov=src",
+    "--cov-report=term-missing",
+    "--cov-report=html",
+    "--durations=5",
+]
+markers = [
+    "unit: ユニットテスト（依存なし、高速）",
+    "integration: インテグレーションテスト（外部依存あり）",
+    "slow: 実行に時間がかかるテスト",
+]
+
+[tool.coverage.run]
+omit = ["*/tests/*", "*/__pycache__/*"]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if TYPE_CHECKING:",
+    "raise NotImplementedError",
+]
+
+[tool.ruff]
+line-length = 100
+target-version = "py313"
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D",      # pydocstyle - docstringチェックを除外
+    "ANN",    # flake8-annotations - 型アノテーション必須を除外
+    "COM812", # trailing-comma-missing - ruff formatと競合
+    "ISC001", # single-line-implicit-string-concatenation - ruff formatと競合
+]
+
+[tool.mypy]
+python_version = "3.13"
+strict = true
+show_error_codes = true
+pretty = true
+cache_dir = ".mypy_cache"
+
+[[tool.mypy.overrides]]
+module = [
+    "redis.*",
+    "psycopg2.*",
+]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false
+warn_return_any = false
+disallow_any_generics = false
