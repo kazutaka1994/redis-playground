@@ -36,6 +36,7 @@ htmlcov/
 *.swp
 *.swo
 *~
+.copilot_chats/
 
 # OS specific
 .DS_Store
